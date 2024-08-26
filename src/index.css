@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .mycontainer {
+        @apply container px-32 py-10 mx-auto;
+    }
+}
