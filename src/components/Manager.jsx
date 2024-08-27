@@ -1,5 +1,7 @@
 import React from 'react'
 import { useRef, useState, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Logo from './Logo'
 
 
@@ -40,9 +42,19 @@ const Manager = () => {
         console.log([...passwordArray, form])
     }
 
-    const copyText = (text)=>{
+    const copyText = (text) => {
         console.log(text)
         navigator.clipboard.writeText(text)
+        toast.success('Copied to Clipboard!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
     }
 
 
@@ -52,7 +64,18 @@ const Manager = () => {
         <>
             <div className="absolute top-0 z-[-2] h-screen w-screen bg-green-50 bg-[radial-gradient(100%_90%_at_50%_0%,rgba(0,135,45,0.32)_0,rgba(0,135,45,0.04)_50%,rgba(0,135,45,0.03)_100%)]"></div>
 
-
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
 
             <div className="mycontainer flex flex-col p4">
                 <h1 className='text-center'><Logo color="black" size="xl" /></h1>
@@ -91,7 +114,7 @@ const Manager = () => {
                                     <td className='p-2 text-center min-w-32'>
                                         <div className="flex justify-center">
                                             <a target='_blank' href={item.site}>{item.site}</a>
-                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.site)}}>
+                                            <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.site) }}>
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/iykgtsbt.json"
                                                     trigger="hover">
@@ -102,7 +125,7 @@ const Manager = () => {
                                     <td className='p-2 text-center min-w-32'>
                                         <div className="flex justify-center">
                                             {item.userName}
-                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.userName)}}>
+                                            <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.userName) }}>
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/iykgtsbt.json"
                                                     trigger="hover">
@@ -113,7 +136,7 @@ const Manager = () => {
                                     <td className='p-2 text-center min-w-32'>
                                         <div className="flex justify-center">
                                             {item.password}
-                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.password)}}>
+                                            <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.password) }}>
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/iykgtsbt.json"
                                                     trigger="hover">
