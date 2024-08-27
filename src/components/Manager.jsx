@@ -1,23 +1,23 @@
 import React from 'react'
-import { useRef , useState , useEffect} from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Logo from './Logo'
 
 
 const Manager = () => {
-    
-    const [form, setForm] = useState({site:"" , userName:"" , password:""})
+
+    const [form, setForm] = useState({ site: "", userName: "", password: "" })
     const [passwordArray, setPasswordArray] = useState([])
 
-    const ref = useRef() 
+    const ref = useRef()
     const pRef = useRef()
 
     useEffect(() => {
-      let passwords = localStorage.getItem("passwords");
-      if(passwords){
-        setPasswordArray(JSON.parse(passwords))
-      }
+        let passwords = localStorage.getItem("passwords");
+        if (passwords) {
+            setPasswordArray(JSON.parse(passwords))
+        }
     }, [])
-    
+
 
     const changeVisibility = () => {
         if (ref.current.src.includes("icons/hide.svg")) {
@@ -30,17 +30,17 @@ const Manager = () => {
     }
 
     const handleChange = (e) => {
-      setForm({...form , [e.target.name]:e.target.value})
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
 
     const savePassword = () => {
-      console.log(form)
-      setPasswordArray([...passwordArray,form])
-      localStorage.setItem("passwords" , JSON.stringify([...passwordArray,form]))
-      console.log([...passwordArray,form])
+        console.log(form)
+        setPasswordArray([...passwordArray, form])
+        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]))
+        console.log([...passwordArray, form])
     }
-    
-    
+
+
 
 
     return (
@@ -69,6 +69,29 @@ const Manager = () => {
                     </lord-icon>
                     <span onClick={savePassword}> Add Password</span>
                 </button>
+            </div>
+            <div className='passwords'>
+                <table className="table-auto container m-auto my-5 bg-green-100 w-full overflow-hidden rounded-lg">
+                    <thead className='bg-green-900 text-white'>
+                        <tr>
+                            <th className='py-2'>Website</th>
+                            <th className='py-2'>Username</th>
+                            <th className='py-2'>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {passwordArray.map((item) => {
+                            return (
+                                <tr className='border-white border'>
+                                    <td className='p-2 text-center w-16'>{item.site}</td>
+                                    <td className='p-2 text-center w-16'>{item.userName}</td>
+                                    <td className='p-2 text-center w-16'>{item.password}</td>
+                                </tr>
+                            )
+                        })}
+
+                    </tbody>
+                </table>
             </div>
         </>
     )
