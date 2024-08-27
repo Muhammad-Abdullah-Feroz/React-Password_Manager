@@ -1,15 +1,23 @@
 import React from 'react'
-import { useRef , useState} from 'react'
+import { useRef , useState , useEffect} from 'react'
 import Logo from './Logo'
 
 
 const Manager = () => {
     
     const [form, setForm] = useState({site:"" , userName:"" , password:""})
+    const [passwordArray, setPasswordArray] = useState([])
 
     const ref = useRef() 
-
     const pRef = useRef()
+
+    useEffect(() => {
+      let passwords = localStorage.getItem("passwords");
+      if(passwords){
+        setPasswordArray(JSON.parse(passwords))
+      }
+    }, [])
+    
 
     const changeVisibility = () => {
         if (ref.current.src.includes("icons/hide.svg")) {
@@ -27,6 +35,9 @@ const Manager = () => {
 
     const savePassword = () => {
       console.log(form)
+      setPasswordArray([...passwordArray,form])
+      localStorage.setItem("passwords" , JSON.stringify([...passwordArray,form]))
+      console.log([...passwordArray,form])
     }
     
     
@@ -34,7 +45,7 @@ const Manager = () => {
 
     return (
         <>
-            <div class="absolute top-0 z-[-2] h-screen w-screen bg-green-50 bg-[radial-gradient(100%_90%_at_50%_0%,rgba(0,135,45,0.32)_0,rgba(0,135,45,0.04)_50%,rgba(0,135,45,0.03)_100%)]"></div>
+            <div className="absolute top-0 z-[-2] h-screen w-screen bg-green-50 bg-[radial-gradient(100%_90%_at_50%_0%,rgba(0,135,45,0.32)_0,rgba(0,135,45,0.04)_50%,rgba(0,135,45,0.03)_100%)]"></div>
 
 
 
