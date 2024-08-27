@@ -40,6 +40,11 @@ const Manager = () => {
         console.log([...passwordArray, form])
     }
 
+    const copyText = (text)=>{
+        console.log(text)
+        navigator.clipboard.writeText(text)
+    }
+
 
 
 
@@ -83,9 +88,39 @@ const Manager = () => {
                         {passwordArray.map((item) => {
                             return (
                                 <tr className='border-white border'>
-                                    <td className='p-2 text-center w-16'>{item.site}</td>
-                                    <td className='p-2 text-center w-16'>{item.userName}</td>
-                                    <td className='p-2 text-center w-16'>{item.password}</td>
+                                    <td className='p-2 text-center min-w-32'>
+                                        <div className="flex justify-center">
+                                            <a target='_blank' href={item.site}>{item.site}</a>
+                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.site)}}>
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/iykgtsbt.json"
+                                                    trigger="hover">
+                                                </lord-icon>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className='p-2 text-center min-w-32'>
+                                        <div className="flex justify-center">
+                                            {item.userName}
+                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.userName)}}>
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/iykgtsbt.json"
+                                                    trigger="hover">
+                                                </lord-icon>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className='p-2 text-center min-w-32'>
+                                        <div className="flex justify-center">
+                                            {item.password}
+                                            <span className='mx-2 cursor-pointer' onClick={()=>{copyText(item.password)}}>
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/iykgtsbt.json"
+                                                    trigger="hover">
+                                                </lord-icon>
+                                            </span>
+                                        </div>
+                                    </td>
                                 </tr>
                             )
                         })}
