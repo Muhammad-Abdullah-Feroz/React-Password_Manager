@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRef, useState, useEffect } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+import { v4 as uuidv4 } from 'uuid'
 import 'react-toastify/dist/ReactToastify.css'
 import Logo from './Logo'
 
@@ -37,9 +38,10 @@ const Manager = () => {
 
     const savePassword = () => {
         console.log(form)
-        setPasswordArray([...passwordArray, form])
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]))
-        console.log([...passwordArray, form])
+        setForm({ site: "", userName: "", password: "" })
+        setPasswordArray([...passwordArray, {...form , id:uuidv4() }])
+        localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form , id:uuidv4() }]))
+        console.log([...passwordArray, {...form , id:uuidv4() }])
     }
 
     const copyText = (text) => {
@@ -54,7 +56,21 @@ const Manager = () => {
             draggable: true,
             progress: undefined,
             theme: "colored",
-            });
+        });
+    }
+
+    const handleDelete = (id) =>{
+        if (confirm("Deleting Password")){
+            console.log("Deleting password with id ", id );
+            localStorage.setItem("passwords" , JSON.stringify(passwordArray.filter(item=>item.id !== id)))
+        }
+    }
+    
+    const handleEdit = (id) =>{
+        console.log("Editing password with id ", id );
+        setForm(passwordArray.filter(item=>item.id === id)[0])
+        setPasswordArray(passwordArray.filter(item=>item.id !== id))
+
     }
 
 
@@ -105,6 +121,7 @@ const Manager = () => {
                             <th className='py-2'>Website</th>
                             <th className='py-2'>Username</th>
                             <th className='py-2'>Password</th>
+                            <th className='py-2'>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,7 +139,7 @@ const Manager = () => {
                                             </span>
                                         </div>
                                     </td>
-                                    <td className='p-2 text-center min-w-32'>
+                                    <td className='p-2 text-center w-48'>
                                         <div className="flex justify-center">
                                             {item.userName}
                                             <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.userName) }}>
@@ -133,12 +150,28 @@ const Manager = () => {
                                             </span>
                                         </div>
                                     </td>
-                                    <td className='p-2 text-center min-w-32'>
+                                    <td className='p-2 text-center w-48'>
                                         <div className="flex justify-center">
                                             {item.password}
                                             <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.password) }}>
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/iykgtsbt.json"
+                                                    trigger="hover">
+                                                </lord-icon>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className='p-2 text-center w-48'>
+                                        <div className="flex justify-center">
+                                            <span className='mx-2 cursor-pointer' onClick={() => { handleEdit(item.id) }}>
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/gwlusjdu.json"
+                                                    trigger="hover">
+                                                </lord-icon>
+                                            </span>
+                                            <span className='mx-2 cursor-pointer' onClick={() => { handleDelete(item.id) }}>
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/skkahier.json"
                                                     trigger="hover">
                                                 </lord-icon>
                                             </span>
