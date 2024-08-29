@@ -14,11 +14,14 @@ const Manager = () => {
     const ref = useRef()
     const pRef = useRef()
 
+    const getPasswords = async ()=>{
+        let req = await fetch("http://localhost:3000")
+        let passwords = await req.json()
+        setPasswordArray(passwords)
+    }
+
     useEffect(() => {
-        let passwords = localStorage.getItem("passwords");
-        if (passwords) {
-            setPasswordArray(JSON.parse(passwords))
-        }
+        getPasswords()
     }, [])
 
 
@@ -36,16 +39,19 @@ const Manager = () => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    const savePassword = () => {
-        console.log(form)
-        setForm({ site: "", userName: "", password: "" })
+    const savePassword = async () => {
         setPasswordArray([...passwordArray, {...form , id:uuidv4() }])
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form , id:uuidv4() }]))
-        console.log([...passwordArray, {...form , id:uuidv4() }])
+        let passwords = await fetch("http://localhost:3000/",{
+            method: "POST",
+            body: JSON.stringify({...form , id:uuidv4()}),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          });
+        setForm({ site: "", userName: "", password: "" })
     }
 
     const copyText = (text) => {
-        console.log(text)
         navigator.clipboard.writeText(text)
         toast.success('Copied to Clipboard!', {
             position: "top-right",
@@ -59,18 +65,27 @@ const Manager = () => {
         });
     }
 
-    const handleDelete = (id) =>{
+    const del = async (id) => {
+        setPasswordArray(passwordArray.filter(item=>item.id !== id))
+            let paswords = await fetch("http://localhost:3000/",{
+                method: "DELETE",
+                body: JSON.stringify({id}),
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8"
+                }
+
+              });
+    }
+
+    const handleDelete = async (id) =>{
         if (confirm("Deleting Password")){
-            console.log("Deleting password with id ", id );
-            setPasswordArray(passwordArray.filter(item=>item.id !== id))
-            localStorage.setItem("passwords" , JSON.stringify(passwordArray.filter(item=>item.id !== id)))
+            del(id);
         }
     }
     
     const handleEdit = (id) =>{
-        console.log("Editing password with id ", id );
         setForm(passwordArray.filter(item=>item.id === id)[0])
-        setPasswordArray(passwordArray.filter(item=>item.id !== id))
+        del(id)
 
     }
 
@@ -97,11 +112,11 @@ const Manager = () => {
             <div className="md:mycontainer flex flex-col p4">
                 <h1 className='text-center'><Logo color="black" size="xl" /></h1>
                 <p className='text-green-800 text-xl text-center'>Your own Password Manager</p>
-                <input onChange={handleChange} value={form.site} className='rounded-full border-green-500 w-full border px-4 py-1 m-2' type="text" name='site' id='' placeholder='Enter Website URL' />
+                <input onChange={handleChange} value={form.site} className='rounded-full border-green-500 w-full border px-4 py-1 m-2' type="text" name='site' id='site' placeholder='Enter Website URL' />
                 <div className="flex flex-col md:flex-row">
-                    <input onChange={handleChange} value={form.userName} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="text" name='userName' id='' placeholder='Enter Username' />
+                    <input onChange={handleChange} value={form.userName} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="text" name='userName' id='username' placeholder='Enter Username' />
                     <div className="relative w-2/3">
-                        <input onChange={handleChange} value={form.password} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="password" name='password' id='' placeholder='Enter Password' ref={pRef} />
+                        <input onChange={handleChange} value={form.password} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="password" name='password' id='password' placeholder='Enter Password' ref={pRef} />
                         <div className="absolute right-1 top-3 cursor-pointer">
                             <img src="icons/hide.svg" width={25} alt="visibility" ref={ref} onClick={changeVisibility} />
                         </div>
@@ -126,9 +141,9 @@ const Manager = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {passwordArray.map((item) => {
+                        {passwordArray.map((item , index) => {
                             return (
-                                <tr className='border-white border'>
+                                <tr key={index} className='border-white border'>
                                     <td className='p-2 text-center min-w-32'>
                                         <div className="flex justify-center">
                                             <a target='_blank' href={item.site}>{item.site}</a>
@@ -153,7 +168,7 @@ const Manager = () => {
                                     </td>
                                     <td className='p-2 text-center w-48'>
                                         <div className="flex justify-center">
-                                            {item.password}
+                                            *****
                                             <span className='mx-2 cursor-pointer' onClick={() => { copyText(item.password) }}>
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/iykgtsbt.json"
