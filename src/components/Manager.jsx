@@ -62,6 +62,7 @@ const Manager = () => {
     const handleDelete = (id) =>{
         if (confirm("Deleting Password")){
             console.log("Deleting password with id ", id );
+            setPasswordArray(passwordArray.filter(item=>item.id !== id))
             localStorage.setItem("passwords" , JSON.stringify(passwordArray.filter(item=>item.id !== id)))
         }
     }
@@ -78,7 +79,7 @@ const Manager = () => {
 
     return (
         <>
-            <div className="absolute top-0 z-[-2] h-screen w-screen bg-green-50 bg-[radial-gradient(100%_90%_at_50%_0%,rgba(0,135,45,0.32)_0,rgba(0,135,45,0.04)_50%,rgba(0,135,45,0.03)_100%)]"></div>
+            {/* <div className="absolute top-0 z-[-2] h-screen w-screen bg-green-50 bg-[radial-gradient(100%_90%_at_50%_0%,rgba(0,135,45,0.32)_0,rgba(0,135,45,0.04)_50%,rgba(0,135,45,0.03)_100%)]"></div> */}
 
             <ToastContainer
                 position="top-right"
@@ -93,11 +94,11 @@ const Manager = () => {
                 theme="colored"
             />
 
-            <div className="mycontainer flex flex-col p4">
+            <div className="md:mycontainer flex flex-col p4">
                 <h1 className='text-center'><Logo color="black" size="xl" /></h1>
                 <p className='text-green-800 text-xl text-center'>Your own Password Manager</p>
                 <input onChange={handleChange} value={form.site} className='rounded-full border-green-500 w-full border px-4 py-1 m-2' type="text" name='site' id='' placeholder='Enter Website URL' />
-                <div className="flex">
+                <div className="flex flex-col md:flex-row">
                     <input onChange={handleChange} value={form.userName} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="text" name='userName' id='' placeholder='Enter Username' />
                     <div className="relative w-2/3">
                         <input onChange={handleChange} value={form.password} className='rounded-full border-green-500 border px-4 py-1 m-2 w-full' type="password" name='password' id='' placeholder='Enter Password' ref={pRef} />
